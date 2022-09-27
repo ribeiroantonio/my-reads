@@ -82,7 +82,7 @@ export const Search = () => {
           <ol className="books-grid">
             {filteredSearchedBooks.map((book) => (
               <li key={book.id}>
-                <Book 
+                <Book
                   book={book}
                   onUpdateBook={rearrangeShelf}
                   showNoneOption={false}

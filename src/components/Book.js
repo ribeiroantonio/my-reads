@@ -13,7 +13,7 @@ export const Book = ({book, onUpdateBook, showNoneOption = true}) => {
             }}
         ></div>
         <div className="book-shelf-changer">
-          <select 
+          <select
             value={book.shelf !== undefined ? book.shelf : "none"}
             onChange={(e) => {onUpdateBook(book, e.target.value)}} >
             <option value="none" disabled>

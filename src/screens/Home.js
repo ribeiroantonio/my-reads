@@ -44,9 +44,9 @@ export const Home = () => {
       </div>
       <div className="list-books-content">
         <div>
-          <Shelf 
-            books={currentlyReading} 
-            isLoading={isLoading} 
+          <Shelf
+            books={currentlyReading}
+            isLoading={isLoading}
             category="Currently Reading"
             onUpdateBook={updateBook}/>
           <Shelf books={wantToRead} isLoading={isLoading} category="Want to Read" onUpdateBook={updateBook}/>
