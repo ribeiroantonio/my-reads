@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import * as BooksAPI from "../BooksAPI.js";
 import { Link } from "react-router-dom";
 import { Book } from "../components/Book";
-import debounce from 'lodash.debounce';
+import debounce from "lodash.debounce";
 
 export const Search = () => {
   const [query, setQuery] = useState("");
