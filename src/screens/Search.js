@@ -6,30 +6,21 @@ import { Book } from "../components/Book";
 import debounce from "lodash.debounce";
 
 export const Search = () => {
+  const [bookShelves, setBookShelves] = useState({});
   const [query, setQuery] = useState("");
   const [searchedBooks, setSearchedBooks] = useState([]);
   const [filteredSearchedBooks, setFilteredSearchedBooks] = useState([]);
-  const [bookShelves, setBookShelves] = useState(new Map());
 
   useEffect(() => {
     BooksAPI.getAll().then((fetchedBooks) => {
-      let map = new Map();
-      fetchedBooks.map((book) => map.set(book.id, book));
-      setBookShelves(map);
+      let shelves = {};
+      fetchedBooks.map((book) => shelves[book.id] = book);
+
+      setBookShelves(shelves);
     });
   }, []);
 
   const debouncedQuery = useRef(debounce(queryValue => search(queryValue), 500)).current;
-
-  const search = (value) => {
-    if (value) {
-      BooksAPI.search(value).then((data) => {
-        data.error ? setSearchedBooks([]) : setSearchedBooks(data);
-      });
-    } else {
-      setSearchedBooks([]);
-    };
-  };
 
   const handleQueryOnChange = e => {
     const { value: queryValue } = e.target;
@@ -38,9 +29,19 @@ export const Search = () => {
     debouncedQuery(queryValue);
   }
 
+  const search = (value) => {
+    if (value) {
+      BooksAPI.search(value).then((searchResults) => {
+        searchResults.error ? setSearchedBooks([]) : setSearchedBooks(searchResults);
+      });
+    } else {
+      setSearchedBooks([]);
+    };
+  };
+
   useEffect(() => {
     setFilteredSearchedBooks(searchedBooks.map((book) => {
-      return bookShelves.has(book.id) ? bookShelves.get(book.id) : book;
+      return (book.id in bookShelves) ? bookShelves[book.id] : book;
     }));
   }, [searchedBooks, bookShelves]);
 
