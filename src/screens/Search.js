@@ -19,46 +19,42 @@ export const Search = () => {
     });
   }, []);
 
-  const debouncedQuery = useRef(debounce(nextValue => search(nextValue), 500)).current;
+  const debouncedQuery = useRef(debounce(queryValue => search(queryValue), 500)).current;
 
   const search = (value) => {
     if (value) {
       BooksAPI.search(value).then((data) => {
-        if (data.error) {
-          console.log("Search error");
-        } else {
-          setSearchedBooks(data);
-        }
+        data.error ? setSearchedBooks([]) : setSearchedBooks(data);
       });
     } else {
       setSearchedBooks([]);
-    }
+    };
   };
 
-  const handleOnChange = e => {
-    const { value: nextValue } = e.target;
-    setQuery(nextValue);
+  const handleQueryOnChange = e => {
+    const { value: queryValue } = e.target;
+    setQuery(queryValue);
 
-    debouncedQuery(nextValue);
+    debouncedQuery(queryValue);
   }
 
   useEffect(() => {
-    const map = searchedBooks.map((book) => {
+    setFilteredSearchedBooks(searchedBooks.map((book) => {
       return bookShelves.has(book.id) ? bookShelves.get(book.id) : book;
-    });
-    setFilteredSearchedBooks(map);
-  }, [searchedBooks]);
+    }));
+  }, [searchedBooks, bookShelves]);
 
   const rearrangeShelf = (book, shelf) => {
-    const newBooks = searchedBooks.map((b) => {
-      if (b.id === book.id) {
+    const newBooks = searchedBooks.map((searchedBook) => {
+      if (searchedBook.id === book.id) {
         book.shelf = shelf;
         return book;
       }
-      return b;
-    });
-    setSearchedBooks(newBooks);
 
+      return searchedBook;
+    });
+
+    setSearchedBooks(newBooks);
     BooksAPI.update(book, shelf);
   };
 
@@ -73,7 +69,7 @@ export const Search = () => {
             type="text"
             placeholder="Search by title, author, or ISBN"
             value={query}
-            onChange={handleOnChange}
+            onChange={handleQueryOnChange}
           />
         </div>
       </div>

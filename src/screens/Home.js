@@ -29,7 +29,7 @@ export const Home = () => {
       if (shelf === "none") {
         setBooks(books.filter((book) => book.id !== updatedBook.id));
         return;
-      }
+      };
 
       updatedBook.shelf = shelf;
       let filteredBooks = books.filter((book) => book.id !== updatedBook.id);
